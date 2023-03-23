@@ -1,0 +1,9 @@
+cryptography
+google-api-python-client
+google-auth-httplib2
+google-auth
+google-cloud-pubsub
+google-cloud-iot
+grpc-google-iam-v1
+pyjwt
+paho-mqtt
