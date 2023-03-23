@@ -1,0 +1,1 @@
+git clone --branch dev https://github.com/shamaneiro/ai_light_connector.git
