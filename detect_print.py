@@ -29,6 +29,7 @@ python3 detect.py \
 import argparse
 import cv2
 import os
+from datetime import datetime
 
 from pycoral.adapters.common import input_size
 from pycoral.adapters.detect import get_objects
@@ -73,16 +74,17 @@ def main():
         #cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
         cv2_im = print_detected_objects(cv2_im, inference_size, objs, labels)
 
-        cv2.imshow('frame', cv2_im)
+        #cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    cap.release()
-    cv2.destroyAllWindows()
+    #cap.release()
+    #cv2.destroyAllWindows()
 
 def append_objs_to_img(cv2_im, inference_size, objs, labels):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
+
     for obj in objs:
         bbox = obj.bbox.scale(scale_x, scale_y)
         x0, y0 = int(bbox.xmin), int(bbox.ymin)
@@ -99,12 +101,13 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
 def print_detected_objects(cv2_im, inference_size, objs, labels):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
+    ts = datetime.now()
     for obj in objs:
         if int(obj.id) == 0:
             bbox = obj.bbox.scale(scale_x, scale_y)
             x0, y0 = int(bbox.xmin), int(bbox.ymin)
             x1, y1 = int(bbox.xmax), int(bbox.ymax)
-            print(f'person position: x = {(x0 + x1)/2}, y = {(y0 + y1)/2}')
+            print(f'{ts} person position: x = {(x0 + x1)/2}, y = {(y0 + y1)/2}')
     return cv2_im
 
 if __name__ == '__main__':
