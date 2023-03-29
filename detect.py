@@ -37,7 +37,7 @@ from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
 
 def main():
-    default_model_dir = '../all_models'
+    default_model_dir = './resources'
     default_model = 'mobilenet_ssd_v2_coco_quant_postprocess_edgetpu.tflite'
     default_labels = 'coco_labels.txt'
     parser = argparse.ArgumentParser()
@@ -47,7 +47,7 @@ def main():
                         default=os.path.join(default_model_dir, default_labels))
     parser.add_argument('--top_k', type=int, default=3,
                         help='number of categories with highest score to display')
-    parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 0)
+    parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 1)
     parser.add_argument('--threshold', type=float, default=0.1,
                         help='classifier score threshold')
     args = parser.parse_args()
