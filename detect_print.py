@@ -101,6 +101,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
 def print_detected_objects(cv2_im, inference_size, objs, labels):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
+    print(f'x {scale_x}, y {scale_y}')
     ts = datetime.now()
     for obj in objs:
         if int(obj.id) == 0:
@@ -112,3 +113,4 @@ def print_detected_objects(cv2_im, inference_size, objs, labels):
 
 if __name__ == '__main__':
     main()
+github
