@@ -17,10 +17,11 @@ def main():
     return_msg['zone2'] = 0
     data_str = str(return_msg)
     
-    publisher.publish(
+    future = publisher.publish(
         topic_path, data_str.encode("utf-8")
     )
-    
+    return future
+
 
 
 
