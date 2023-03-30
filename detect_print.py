@@ -157,7 +157,8 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
     for i in range(len(zones)):
         str_base = str_base + f"# of people in zone {i}: {return_msg[f'zone{i}']}\n"
     print(str_base)
-    future = publisher.publish(topic_path, str_base.encode("utf-8"))
+    string_input = str(return_msg)
+    future = publisher.publish(topic_path, string_input.encode("utf-8"))
 
     return cv2_im
 
