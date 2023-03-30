@@ -9,21 +9,11 @@ topic_id = "coral-topic-demo"
 publisher = pubsub_v1.PublisherClient()
 topic_path = publisher.topic_path(project_id, topic_id)
 
-def main():
 
-    return_msg = {}
-    return_msg['ts'] = datetime.now(tz=pytz.timezone("Europe/Berlin"))
-    return_msg['zone1'] = 1
-    return_msg['zone2'] = 0
-    data_str = str(return_msg)
-    
-    future = publisher.publish(
-        topic_path, data_str.encode("utf-8")
-    )
-    return future
+return_msg = {}
+return_msg['ts'] = datetime.now(tz=pytz.timezone("Europe/Berlin"))
+return_msg['zone1'] = 1
+return_msg['zone2'] = 0
+data_str = str(return_msg)
 
-
-
-
-if __name__ == '__main__':
-    main()
+future = publisher.publish(topic_path, data_str.encode("utf-8"))
