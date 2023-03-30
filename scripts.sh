@@ -19,3 +19,10 @@ gcloud auth activate-service-account coral-device@ai-store-heatmapping-incubator
 
 
 gcloud pubsub topics publish projects/ai-store-heatmapping-incubator/topics/coral-topic-demo --message="hello" \
+
+
+python3 scripts/detect_image.py 
+  --model models&labels/ssd_mobilenet_v2_coco_quant_postprocess_edgetpu.tflite \
+  --labels models&labels/coco_labels.txt \
+  --input test_data/grace_hopper.bmp \
+  --output test_data/grace_hopper_processed.bmp

@@ -29,6 +29,8 @@ python3 detect.py \
 import argparse
 import cv2
 import os
+from shapely.geometry import Point, Polygon
+
 from datetime import datetime
 
 from pycoral.adapters.common import input_size
@@ -59,6 +61,15 @@ def main():
     labels = read_label_file(args.labels)
     inference_size = input_size(interpreter)
 
+    # Build the zones using shapely
+    coords1 = [(320, 0), (640, 0), (640, 480), (320, 40)]
+    zone1 = Polygon(coords1)
+    coords2 = [(319, 0), (319, 480), (0, 480), (0, 0)]
+    zone2 = Polygon(coords2)
+
+    zones = [zone1,zone2]
+
+
     cap = cv2.VideoCapture(args.camera_idx)
 
     while cap.isOpened():
@@ -72,14 +83,15 @@ def main():
         run_inference(interpreter, cv2_im_rgb.tobytes())
         objs = get_objects(interpreter, args.threshold)[:args.top_k]
         #cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
-        cv2_im = print_detected_objects(cv2_im, inference_size, objs, labels)
+        #cv2_im = print_detected_objects(cv2_im, inference_size, objs, labels)
+        cv2_im = print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
 
         #cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    #cap.release()
-    #cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
 
 def append_objs_to_img(cv2_im, inference_size, objs, labels):
     height, width, channels = cv2_im.shape
@@ -101,7 +113,6 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
 def print_detected_objects(cv2_im, inference_size, objs, labels):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
-    print(f'x {width}, y {height}')
     ts = datetime.now()
     for obj in objs:
         if int(obj.id) == 0:
@@ -111,6 +122,18 @@ def print_detected_objects(cv2_im, inference_size, objs, labels):
             print(f'{ts} person position: x = {(x0 + x1)/2}, y = {(y0 + y1)/2}')
     return cv2_im
 
+def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones):
+    height, width, channels = cv2_im.shape
+    scale_x, scale_y = width / inference_size[0], height / inference_size[1]
+    ts = datetime.now()
+    for obj in objs:
+        if int(obj.id) == 0:
+            bbox = obj.bbox.scale(scale_x, scale_y)
+            x0, y0 = int(bbox.xmin), int(bbox.ymin)
+            x1, y1 = int(bbox.xmax), int(bbox.ymax)
+            x, y = (x0 + x1)/2, (y0 + y1)/2
+            print(f'{ts} person position: x = {x}, y = {y}')
+    return cv2_im
+
 if __name__ == '__main__':
     main()
-github
