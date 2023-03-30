@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 
 project_id = "ai-store-heatmapping-incubator"
-topic_id = "coral-topic-demo"
+topic_id = "coral-topic-demo2"
 
 publisher = pubsub_v1.PublisherClient()
 topic_path = publisher.topic_path(project_id, topic_id)
