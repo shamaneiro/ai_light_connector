@@ -148,7 +148,7 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
     str_base = f"{return_msg['ts'] }: "
     for i in range(len(zones)):
         str_base = str_base + f"# of people in zone {i}: {return_msg[f'zone{i}']}\n"
-        print(str_base)
+    print(str_base)
     return cv2_im
 
 if __name__ == '__main__':
