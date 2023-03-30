@@ -32,6 +32,7 @@ import os
 from shapely.geometry import Point, Polygon
 
 from datetime import datetime
+import pytz
 
 from pycoral.adapters.common import input_size
 from pycoral.adapters.detect import get_objects
@@ -71,7 +72,7 @@ def main():
 
 
     cap = cv2.VideoCapture(args.camera_idx)
-    cap.set(cv2.CAP_PROP_FPS, 2)
+    cap.set(cv2.CAP_PROP_FPS, 4)
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -83,7 +84,7 @@ def main():
         cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
         run_inference(interpreter, cv2_im_rgb.tobytes())
         objs = get_objects(interpreter, args.threshold)[:args.top_k]
-        cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
+        #cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
         #cv2_im = print_detected_objects(cv2_im, inference_size, objs, labels)
         cv2_im = print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
 
@@ -132,7 +133,7 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
     for x in range(len(zones)):
         return_msg[f'zone{x}'] = 0
 
-    return_msg['ts'] = datetime.now()
+    return_msg['ts'] = datetime.now(tz=pytz.timezone("Europe/Berlin"))
     for obj in objs:
         if int(obj.id) == 0:
             bbox = obj.bbox.scale(scale_x, scale_y)
