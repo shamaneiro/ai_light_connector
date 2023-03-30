@@ -30,6 +30,7 @@ import argparse
 import cv2
 import os
 from shapely.geometry import Point, Polygon
+from google.cloud import pubsub_v1
 
 from datetime import datetime
 import pytz
@@ -39,6 +40,12 @@ from pycoral.adapters.detect import get_objects
 from pycoral.utils.dataset import read_label_file
 from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
+
+project_id = "ai-store-heatmapping-incubator"
+topic_id = "coral-topic-demo"
+
+publisher = pubsub_v1.PublisherClient()
+topic_path = publisher.topic_path(project_id, topic_id)
 
 def main():
     default_model_dir = './resources'
@@ -150,6 +157,8 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
     for i in range(len(zones)):
         str_base = str_base + f"# of people in zone {i}: {return_msg[f'zone{i}']}\n"
     print(str_base)
+    future = publisher.publish(topic_path, str_base.encode("utf-8"))
+
     return cv2_im
 
 if __name__ == '__main__':
