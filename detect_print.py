@@ -80,7 +80,7 @@ def main():
 
 
     cap = cv2.VideoCapture(args.camera_idx)
-    cap.set(cv2.CAP_PROP_FPS, 4)
+    cap.set(cv2.CAP_PROP_FPS, 2)
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -94,7 +94,7 @@ def main():
         objs = get_objects(interpreter, args.threshold)[:args.top_k]
         #cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
         #cv2_im = print_detected_objects(cv2_im, inference_size, objs, labels)
-        cv2_im = print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
+        #cv2_im = print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
 
         cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -157,7 +157,7 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
     for i in range(len(zones)):
         str_base = str_base + f"# of people in zone {i}: {return_msg[f'zone{i}']}\n"
     print(str_base)
-    # Prepare PybSub message
+    # Prepare PubSub message
     record = {"ts": now.isoformat(), "zone0": return_msg["zone0"], "zone1": return_msg["zone1"]}
     data_str = json.dumps(record)
 
