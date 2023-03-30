@@ -62,12 +62,12 @@ def main():
     inference_size = input_size(interpreter)
 
     # Build the zones using shapely
-    coords1 = [(320, 0), (640, 0), (640, 480), (320, 40)]
+    coords0 = [(320, 0), (640, 0), (640, 480), (320, 40)]
+    zone0 = Polygon(coords1)
+    coords1 = [(319, 0), (319, 480), (0, 480), (0, 0)]
     zone1 = Polygon(coords1)
-    coords2 = [(319, 0), (319, 480), (0, 480), (0, 0)]
-    zone2 = Polygon(coords2)
 
-    zones = [zone1,zone2]
+    zones = [zone0,zone1]
 
 
     cap = cv2.VideoCapture(args.camera_idx)
@@ -125,14 +125,30 @@ def print_detected_objects(cv2_im, inference_size, objs, labels):
 def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
+    
+    # create the counters for zones
+    for x in range(len(zones)):
+        exec("zone_counter" + str(x) + " = 0")
+
     ts = datetime.now()
     for obj in objs:
         if int(obj.id) == 0:
             bbox = obj.bbox.scale(scale_x, scale_y)
             x0, y0 = int(bbox.xmin), int(bbox.ymin)
             x1, y1 = int(bbox.xmax), int(bbox.ymax)
-            x, y = (x0 + x1)/2, (y0 + y1)/2
-            print(f'{ts} person position: x = {x}, y = {y}')
+            point = Point((x0 + x1)/2, (y0 + y1)/2)
+            for zone in zones:
+                zone_idx = zones.index(zone)
+                if zone.contains(point):
+                    exec("zone_counter" + str(zone_idx) + " += 1")
+    
+    # Build responce string
+    str_base = f'{ts}: '
+    for i in range(len(zones)):
+        str_base = str_base + f"# of people in zone {i}: {exec(f'zone_counter{i}')}\n"
+
+
+        print(str_base)
     return cv2_im
 
 if __name__ == '__main__':
