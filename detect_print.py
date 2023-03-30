@@ -125,10 +125,14 @@ def print_detected_objects(cv2_im, inference_size, objs, labels):
 def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
-    
+    print(zones)
+    print(len(zones))
     # create the counters for zones
     for x in range(len(zones)):
         exec("zone_counter" + str(x) + " = 0")
+
+    print(f'zone counter 0 ; {zone_counter0}')
+    print(f'zone counter 1 ; {zone_counter1}')
 
     ts = datetime.now()
     for obj in objs:
