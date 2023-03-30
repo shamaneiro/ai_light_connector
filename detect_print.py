@@ -28,6 +28,7 @@ python3 detect.py \
 """
 import argparse
 import cv2
+import json
 import os
 from shapely.geometry import Point, Polygon
 from google.cloud import pubsub_v1
@@ -139,8 +140,7 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
     return_msg = {}
     for x in range(len(zones)):
         return_msg[f'zone{x}'] = 0
-
-    return_msg['ts'] = datetime.now(tz=pytz.timezone("Europe/Berlin"))
+    now = datetime.now(tz=pytz.timezone("Europe/Berlin")) 
     for obj in objs:
         if int(obj.id) == 0:
             bbox = obj.bbox.scale(scale_x, scale_y)
@@ -157,8 +157,11 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
     for i in range(len(zones)):
         str_base = str_base + f"# of people in zone {i}: {return_msg[f'zone{i}']}\n"
     print(str_base)
-    string_input = str(return_msg)
-    future = publisher.publish(topic_path, string_input.encode("utf-8"))
+    # Prepare PybSub message
+    record = {"ts": now.isoformat(), "zone0": return_msg["zone0"], "zone1": return_msg["zone1"]}
+    data_str = json.dumps(record)
+
+    future = publisher.publish(topic_path, data_str.encode("utf-8"))
 
     return cv2_im
 
