@@ -63,7 +63,7 @@ def main():
 
     # Build the zones using shapely
     coords0 = [(320, 0), (640, 0), (640, 480), (320, 40)]
-    zone0 = Polygon(coords1)
+    zone0 = Polygon(coords0)
     coords1 = [(319, 0), (319, 480), (0, 480), (0, 0)]
     zone1 = Polygon(coords1)
 
