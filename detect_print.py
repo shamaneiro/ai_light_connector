@@ -141,14 +141,17 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
                 zone_idx = zones.index(zone)
                 if zone.contains(point):
                     exec("zone_counter" + str(zone_idx) + " += 1")
+
+    print(f'zone counter 0 ; {zone_counter0}')
+    print(f'zone counter 1 ; {zone_counter1}')
     
     # Build responce string
-    str_base = f'{ts}: '
-    for i in range(len(zones)):
-        str_base = str_base + f"# of people in zone {i}: {exec(f'zone_counter{i}')}\n"
+    # str_base = f'{ts}: '
+    # for i in range(len(zones)):
+    #     str_base = str_base + f"# of people in zone {i}: {exec(f'zone_counter{i}')}\n"
 
 
-        print(str_base)
+    #     print(str_base)
     return cv2_im
 
 if __name__ == '__main__':
