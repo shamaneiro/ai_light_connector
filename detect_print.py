@@ -43,7 +43,7 @@ from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
 
 project_id = "ai-store-heatmapping-incubator"
-topic_id = "coral-topic-demo"
+topic_id = "coral-2-zones"
 
 publisher = pubsub_v1.PublisherClient()
 topic_path = publisher.topic_path(project_id, topic_id)
