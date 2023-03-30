@@ -128,9 +128,9 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
     # create the counters for zones
     return_msg = {}
     for x in range(len(zones)):
-        return_msg[f'zone_counter_{x}'] = 0
+        return_msg[f'zone{x}'] = 0
 
-    ts = datetime.now()
+    return_msg['ts'] = datetime.now()
     for obj in objs:
         if int(obj.id) == 0:
             bbox = obj.bbox.scale(scale_x, scale_y)
@@ -140,19 +140,13 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
             for zone in zones:
                 zone_idx = zones.index(zone)
                 if zone.contains(point):
-                    return_msg[f'zone_counter_{zone_idx}'] += 1
-                    
-
-    print(f'zone counter 0 ; {return_msg[f"zone_counter_0"]}')
-    print(f'zone counter 1 ; {return_msg[f"zone_counter_1"]}')
-    
+                    return_msg[f'zone{zone_idx}'] += 1
+                        
     # Build responce string
-    # str_base = f'{ts}: '
-    # for i in range(len(zones)):
-    #     str_base = str_base + f"# of people in zone {i}: {exec(f'zone_counter{i}')}\n"
-
-
-    #     print(str_base)
+    str_base = f"{return_msg['ts'] }: "
+    for i in range(len(zones)):
+        str_base = str_base + f"# of people in zone {i}: {return_msg[f'zone{zone_idx}']}\n"
+        print(str_base)
     return cv2_im
 
 if __name__ == '__main__':
