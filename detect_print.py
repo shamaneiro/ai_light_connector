@@ -125,15 +125,10 @@ def print_detected_objects(cv2_im, inference_size, objs, labels):
 def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
-    print(zones)
-    print(len(zones))
     # create the counters for zones
     return_msg = {}
     for x in range(len(zones)):
         return_msg[f'zone_counter_{x}'] = 0
-
-    print(f'zone counter 0 ; {return_msg["zone_counter_0"]}')
-    print(f'zone counter 1 ; {return_msg["zone_counter_1"]}')
 
     ts = datetime.now()
     for obj in objs:
@@ -145,10 +140,11 @@ def print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
             for zone in zones:
                 zone_idx = zones.index(zone)
                 if zone.contains(point):
-                    exec("zone_counter" + str(zone_idx) + " += 1")
+                    return_msg[f'zone_counter_{zone_idx}'] += 1
+                    
 
-    print(f'zone counter 0 ; {zone_counter0}')
-    print(f'zone counter 1 ; {zone_counter1}')
+    print(f'zone counter 0 ; {return_msg[f"zone_counter_0"]}')
+    print(f'zone counter 1 ; {return_msg[f"zone_counter_1"]}')
     
     # Build responce string
     # str_base = f'{ts}: '
