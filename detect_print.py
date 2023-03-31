@@ -94,7 +94,7 @@ def main():
         objs = get_objects(interpreter, args.threshold)[:args.top_k]
         #cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
         #cv2_im = print_detected_objects(cv2_im, inference_size, objs, labels)
-        #cv2_im = print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
+        cv2_im = print_detected_objects_per_zone(cv2_im, inference_size, objs, labels, zones)
 
         cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
